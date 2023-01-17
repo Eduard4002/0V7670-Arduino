@@ -42,31 +42,39 @@ namespace CamReceiver
 
         unsafe private void CamTimer_Tick(object sender, EventArgs e)
         {
-
+    
             if (CamPort.IsOpen)
             {
 
-                byte data = 0;
+                int data = CamPort.ReadByte();
 
-
-                for (int y = 0; y < 480; y++)
+                //Waiting for a zero since we are sending "0" before starting to send rest of data
+                while(data != 0)
                 {
-                    for (int x = 0; x < 640; x++)
+                    for (int y = 0; y < 480; y++)
                     {
-                        data = (byte)CamPort.ReadByte();
+                        for (int x = 0; x < 640; x++)
+                        {
+                            data = CamPort.ReadByte();
 
-                        bmp.SetPixel(x, y, Color.FromArgb(data, data, data));
+                            bmp.SetPixel(x, y, Color.FromArgb(data, data, data));
 
-                        //sw.Write(data + " ");
+                            sw.Write(data + " ");
 
-                        //CamData.AppendText(data.ToString());
 
+                        }
                     }
-                }
-                MainImage.Image = bmp;
-                MainImage.Invalidate();
+                    sw.WriteLine("");
+                    sw.WriteLine("");
+                    CamData.Text = "Image done";
 
-                sw.Flush();
+                    MainImage.Image = bmp;
+                    MainImage.Invalidate();
+
+                    sw.Flush();
+                }
+
+                
 
             }
             else
@@ -93,7 +101,7 @@ namespace CamReceiver
 
                         bmp.SetPixel(x, y, Color.FromArgb(data, data, data));
 
-                        //sw.Write(data + " ");
+                        sw.Write(data + " ");
 
                         //CamData.AppendText(data.ToString());
 
