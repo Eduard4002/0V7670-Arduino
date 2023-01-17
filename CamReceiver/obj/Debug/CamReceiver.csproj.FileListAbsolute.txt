@@ -1,0 +1,11 @@
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\bin\Debug\CamReceiver.exe.config
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\bin\Debug\CamReceiver.exe
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\bin\Debug\CamReceiver.pdb
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\obj\Debug\CamReceiver.csproj.AssemblyReference.cache
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\obj\Debug\CamReceiver.csproj.SuggestedBindingRedirects.cache
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\obj\Debug\CamReceiver.Form1.resources
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\obj\Debug\CamReceiver.Properties.Resources.resources
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\obj\Debug\CamReceiver.csproj.GenerateResource.cache
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\obj\Debug\CamReceiver.csproj.CoreCompileInputs.cache
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\obj\Debug\CamReceiver.exe
+C:\Users\Eduard Mihic\Desktop\CamReceiver\CamReceiver\obj\Debug\CamReceiver.pdb
