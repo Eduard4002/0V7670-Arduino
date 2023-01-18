@@ -20,3 +20,13 @@ D:\Documents\ArduinoProjects\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.cs
 D:\Documents\ArduinoProjects\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.csproj.CoreCompileInputs.cache
 D:\Documents\ArduinoProjects\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.exe
 D:\Documents\ArduinoProjects\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.pdb
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\bin\Debug\CamReceiver.exe.config
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\bin\Debug\CamReceiver.exe
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\bin\Debug\CamReceiver.pdb
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.csprojAssemblyReference.cache
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.Form1.resources
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.Properties.Resources.resources
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.csproj.GenerateResource.cache
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.csproj.CoreCompileInputs.cache
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.exe
+C:\Users\eduard.mihic\Documents\0V7670-Arduino\CamReceiver\obj\Debug\CamReceiver.pdb

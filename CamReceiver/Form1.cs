@@ -27,6 +27,8 @@ namespace CamReceiver
             InitializeComponent();
             sw = new StreamWriter("C:/TEST/CAM.txt");
             bmp = new Bitmap(640, 480);
+            //bmpData = bmp.LockBits(new Rectangle(0, 0, 640, 480), System.Drawing.Imaging.ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
+
             buffer[0] = 0;
 
 
@@ -64,6 +66,23 @@ namespace CamReceiver
 
                         }
                     }
+                    /*int stride = bmpData.Stride < 0 ? -bmpData.Stride : bmpData.Stride;
+                    unsafe
+                    {
+                        byte* row = (byte*)bmpData.Scan0;
+                        for (int f = 0; f < 480; f++)
+                        {
+                            for (int w = 0; w < 640; w++)
+                            {
+                                data = CamPort.ReadByte();
+                                row[1] = (byte)Math.Min(255, Math.Max(0, data));
+                                //dataCount++;
+                            }
+                            row += stride;
+                        }
+                    }
+                    bmp.UnlockBits(bmpData);*/
+
                     sw.WriteLine("");
                     sw.WriteLine("");
                     CamData.Text = "Image done";
