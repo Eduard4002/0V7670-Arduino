@@ -20,7 +20,7 @@ namespace CamReceiver
         object syncRoot = new object();
         byte[] buffer = new byte[1];
 
-
+        
 
         public Form1()
         {
@@ -43,131 +43,61 @@ namespace CamReceiver
         int bytesRead = 0;
 
         unsafe private void CamTimer_Tick(object sender, EventArgs e)
-        {
+        {                     
     
-            if (CamPort.IsOpen)
+        }
+        void requestImage(int width, int height)
+        {
+            //Send "0" to camera
+            CamPort.Write(buffer, 0, buffer.Length);
+            int data;
+
+            //Wait for a "0" from camera, means we are ready to take new image
+            do
             {
-
-                int data = CamPort.ReadByte();
-
-                //Waiting for a zero since we are sending "0" before starting to send rest of data
-                while(data != 0)
-                {
-                    for (int y = 0; y < 480; y++)
-                    {
-                        for (int x = 0; x < 640; x++)
-                        {
-                            data = CamPort.ReadByte();
-
-                            bmp.SetPixel(x, y, Color.FromArgb(data, data, data));
-
-                            sw.Write(data + " ");
-
-
-                        }
-                    }
-                    /*int stride = bmpData.Stride < 0 ? -bmpData.Stride : bmpData.Stride;
-                    unsafe
-                    {
-                        byte* row = (byte*)bmpData.Scan0;
-                        for (int f = 0; f < 480; f++)
-                        {
-                            for (int w = 0; w < 640; w++)
-                            {
-                                data = CamPort.ReadByte();
-                                row[1] = (byte)Math.Min(255, Math.Max(0, data));
-                                //dataCount++;
-                            }
-                            row += stride;
-                        }
-                    }
-                    bmp.UnlockBits(bmpData);*/
-
-                    sw.WriteLine("");
-                    sw.WriteLine("");
-                    CamData.Text = "Image done";
-
-                    MainImage.Image = bmp;
-                    MainImage.Invalidate();
-
-                    sw.Flush();
-                }
-
                 
+                data = CamPort.ReadByte();
+            } while (data != 0);
+
+            //received a 0, we can start reading from camera
+            CamData.Text = "Creating image...";
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    data = CamPort.ReadByte();
+                    if (data == -1)
+                    {
+                        CamData.Text = "DATA STOPPED";
+                        break;
+                    }
+
+                    bmp.SetPixel(x, y, Color.FromArgb(data, data, data));
+
+
+                    //sw.Write(data + " ");
+
+                    bytesRead++;
+
+                }
+                CamData.Text = bytesRead.ToString();
 
             }
-            else
-            {
-                //CamData.AppendText(CamPort.BytesToRead.ToString());
-            }
+            CamData.Text = "Image done";
+            CamData.AppendText(" " + bytesRead);
+            bytesRead = 0;
+
+            MainImage.Image = bmp;
+            MainImage.Invalidate();
+
+            sw.Flush();
         }
        
         private void button1_Click(object sender, EventArgs e)
         {
+            requestImage(640 / 2, 480);
 
-
-            if (CamPort.IsOpen)
-            {
-
-                byte data = 0;
-             
-
-                for (int y = 0; y < 480; y++)
-                {
-                    for (int x = 0; x < 640; x++)
-                    {
-                        data = (byte)CamPort.ReadByte();
-
-                        bmp.SetPixel(x, y, Color.FromArgb(data, data, data));
-
-                        sw.Write(data + " ");
-
-                        //CamData.AppendText(data.ToString());
-
-                    }
-                }
-                MainImage.Image = bmp;
-                MainImage.Invalidate();
-
-                sw.Flush();
-
-            }
-            else
-            {
-                //CamData.AppendText(CamPort.BytesToRead.ToString());
-            }
-            /*
-            int data = CamPort.ReadByte();
-
-            byte[] dataBuffer = new byte[1024];
-            int bytesRead = CamPort.Read(dataBuffer, 0, dataBuffer.Length);
-            //CamData.AppendText(bytesRead.ToString());
-
-            if (bytesRead > 0)
-            {
-                for (int i = 0; i < bytesRead; i++)
-                {
-                    try
-                    {
-                        bmp.SetPixel(xCount, YCount, Color.FromArgb(dataBuffer[i], dataBuffer[i], dataBuffer[i]));
-                        xCount = (i / 480) * count;
-
-                        YCount = (i % 480);
-                    }
-                    catch (Exception exc)
-                    {
-                        //CamData.AppendText(exc.Message);
-                    }
-
-                }
-                CamData.AppendText(count.ToString());
-                count++;
-
-
-            }
-
-            MainImage.Image = bmp;
-            MainImage.Invalidate();*/
         }
 
         private void MainImage_Click(object sender, EventArgs e)
