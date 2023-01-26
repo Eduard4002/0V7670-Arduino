@@ -9,9 +9,9 @@
 /* Configuration: this lets you easily change between different resolutions
  * You must only uncomment one
  * no more no less*/
-//#define useVga
+#define useVga
 //#define useQvga
-#define useQqvga
+//#define useQqvga
 
 static inline void serialWrB(uint8_t dat){
   while(!( UCSR0A & (1<<UDRE0)));//wait for byte to transmit
@@ -25,6 +25,7 @@ static void StringPgm(const char * str){
 }
 static void captureImg(uint16_t wg,uint16_t hg){
   uint16_t lg2;
+
 #ifdef useQvga
   uint8_t buf[640];
 #elif defined(useQqvga)
@@ -33,24 +34,26 @@ static void captureImg(uint16_t wg,uint16_t hg){
   //StringPgm(PSTR("RDY"));
   //UDR0=0;
   serialWrB(0);
-  //Wait for vsync it is on pin 3 (counting from 0) portD
-  while(!(PIND&8));//wait for high
-  while((PIND&8));//wait for low
 
-  while(!(PIND&(1<<3))); // Wait for HREF signal to go high
-while((PIND&(1<<3))); // Wait for HREF signal to go low
+  //Wait for vsync it is on pin 3 (counting from 0) portD
+ // while(!(PIND&8));//wait for high
+  //while((PIND&8));//wait for low
+
+
 #ifdef useVga
   while(hg--){
     lg2=wg;
     while(lg2--){
       while((PIND&4));//wait for low
       UDR0=(PINC&15)|(PIND&240);
-      
       while(!(PIND&4));//wait for high
     }
-     while(!(PINB&(1<<3))); // Wait for HREF signal to go high
-    while((PINB&(1<<3))); // Wait for HREF signal to go low
+    while(!PORTB&(1 << 3));
+    while(PORTB&(1 << 3));
+
   }
+ 
+
 #elif defined(useQvga)
   /*We send half of the line while reading then half later */
   while(hg--){
@@ -134,6 +137,7 @@ void setup(){
   setRes(VGA);
   setColorSpace(BAYER_RGB);
   wrReg(0x11,25);
+
 #elif defined(useQvga)
   setRes(QVGA);
   setColorSpace(YUV422);
@@ -146,22 +150,29 @@ void setup(){
   /* If you are not sure what value to use here for the divider (register 0x11)
    * Values I have found to work raw vga 25 qqvga yuv422 12 qvga yuv422 21
    * run the commented out test below and pick the smallest value that gets a correct image */
-  while (1){
+  while(1){
     /* captureImg operates in bytes not pixels in some cases pixels are two bytes per pixel
      * So for the width (if you were reading 640x480) you would put 1280 if you are reading yuv422 or rgb565 */
     /*uint8_t x=63;//Uncomment this block to test divider settings note the other line you need to uncomment
       do{
       wrReg(0x11,x);
       _delay_ms(1000);*/
-        #ifdef useVga
-          captureImg(640,480);
+      if(UDR0 == 0){
+
+         #ifdef useVga
+           captureImg(640,480);
       #elif defined(useQvga)
           captureImg(320*2,240);
       #else
           captureImg(160*2,120);
       #endif
+      }
       
-
+      
+  
     //}while(--x);//Uncomment this line to test divider settings
   }
+}
+void loop(){
+
 }

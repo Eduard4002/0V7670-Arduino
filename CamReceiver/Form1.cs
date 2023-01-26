@@ -55,7 +55,6 @@ namespace CamReceiver
             //Wait for a "0" from camera, means we are ready to take new image
             do
             {
-                
                 data = CamPort.ReadByte();
             } while (data != 0);
 
@@ -78,14 +77,13 @@ namespace CamReceiver
 
                     //sw.Write(data + " ");
 
-                    bytesRead++;
 
                 }
+                bytesRead += height;
                 CamData.Text = bytesRead.ToString();
 
             }
             CamData.Text = "Image done";
-            CamData.AppendText(" " + bytesRead);
             bytesRead = 0;
 
             MainImage.Image = bmp;
