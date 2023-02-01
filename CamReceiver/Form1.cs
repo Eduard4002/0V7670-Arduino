@@ -26,7 +26,7 @@ namespace CamReceiver
         {
             InitializeComponent();
             sw = new StreamWriter("C:/TEST/CAM.txt");
-            bmp = new Bitmap(640, 480);
+            //bmp = new Bitmap(640, 480);
             //bmpData = bmp.LockBits(new Rectangle(0, 0, 640, 480), System.Drawing.Imaging.ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
 
             buffer[0] = 0;
@@ -49,7 +49,10 @@ namespace CamReceiver
         void requestImage(int width, int height)
         {
             //Send "0" to camera
+            bmp = new Bitmap(width, height);
+
             CamPort.Write(buffer, 0, buffer.Length);
+
             int data;
 
             //Wait for a "0" from camera, means we are ready to take new image
@@ -60,10 +63,10 @@ namespace CamReceiver
 
             //received a 0, we can start reading from camera
             CamData.Text = "Creating image...";
-
-            for (int x = 0; x < width; x++)
+            for(int y = height-1;y >= 0; y--)
             {
-                for (int y = 0; y < height; y++)
+                int _width = width;
+                for(int x = _width-1;x >= 0; x--)
                 {
                     data = CamPort.ReadByte();
                     if (data == -1)
@@ -74,15 +77,11 @@ namespace CamReceiver
 
                     bmp.SetPixel(x, y, Color.FromArgb(data, data, data));
 
-
-                    //sw.Write(data + " ");
-
-
                 }
                 bytesRead += height;
-                CamData.Text = bytesRead.ToString();
-
+                //CamData.Text = bytesRead.ToString();
             }
+
             CamData.Text = "Image done";
             bytesRead = 0;
 
@@ -94,7 +93,7 @@ namespace CamReceiver
        
         private void button1_Click(object sender, EventArgs e)
         {
-            requestImage(640 / 2, 480);
+            requestImage(640, 480);
 
         }
 

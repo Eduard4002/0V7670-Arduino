@@ -36,7 +36,7 @@ static void captureImg(uint16_t wg,uint16_t hg){
   serialWrB(0);
 
   //Wait for vsync it is on pin 3 (counting from 0) portD
- // while(!(PIND&8));//wait for high
+  //while(!(PIND&8));//wait for high
   //while((PIND&8));//wait for low
 
 
@@ -45,11 +45,11 @@ static void captureImg(uint16_t wg,uint16_t hg){
     lg2=wg;
     while(lg2--){
       while((PIND&4));//wait for low
-      UDR0=(PINC&15)|(PIND&240);
+      UDR0=(PINC&0x0F)|(PIND&0xF0);
       while(!(PIND&4));//wait for high
     }
-    while(!PORTB&(1 << 3));
-    while(PORTB&(1 << 3));
+    //while(PORTB&8);
+    //while(!(PORTB&8));
 
   }
  
@@ -158,7 +158,6 @@ void setup(){
       wrReg(0x11,x);
       _delay_ms(1000);*/
       if(UDR0 == 0){
-
          #ifdef useVga
            captureImg(640,480);
       #elif defined(useQvga)
