@@ -147,19 +147,22 @@ void setup(){
   setColorSpace(YUV422);
   wrReg(0x11,3);
 #endif
+  //uint8_t x=63;
   /* If you are not sure what value to use here for the divider (register 0x11)
    * Values I have found to work raw vga 25 qqvga yuv422 12 qvga yuv422 21
    * run the commented out test below and pick the smallest value that gets a correct image */
   while(1){
     /* captureImg operates in bytes not pixels in some cases pixels are two bytes per pixel
      * So for the width (if you were reading 640x480) you would put 1280 if you are reading yuv422 or rgb565 */
-    /*uint8_t x=63;//Uncomment this block to test divider settings note the other line you need to uncomment
+    /*;//Uncomment this block to test divider settings note the other line you need to uncomment
       do{
       wrReg(0x11,x);
       _delay_ms(1000);*/
+
       if(UDR0 == 0){
          #ifdef useVga
-           captureImg(640,480);
+            captureImg(640,480);
+
       #elif defined(useQvga)
           captureImg(320*2,240);
       #else

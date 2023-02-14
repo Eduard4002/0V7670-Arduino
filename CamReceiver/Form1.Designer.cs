@@ -41,15 +41,16 @@ namespace CamReceiver
             // CamPort
             // 
             this.CamPort.BaudRate = 1000000;
-            this.CamPort.PortName = "COM6";
+            this.CamPort.PortName = "COM9";
             // 
             // CamData
             // 
-            this.CamData.Location = new System.Drawing.Point(124, -2);
+            this.CamData.Location = new System.Drawing.Point(83, -1);
+            this.CamData.Margin = new System.Windows.Forms.Padding(2);
             this.CamData.Multiline = true;
             this.CamData.Name = "CamData";
             this.CamData.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.CamData.Size = new System.Drawing.Size(673, 129);
+            this.CamData.Size = new System.Drawing.Size(450, 85);
             this.CamData.TabIndex = 0;
             // 
             // CamTimer
@@ -59,9 +60,10 @@ namespace CamReceiver
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(22, 66);
+            this.button1.Location = new System.Drawing.Point(15, 43);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(92, 49);
+            this.button1.Size = new System.Drawing.Size(61, 32);
             this.button1.TabIndex = 1;
             this.button1.Text = "Image";
             this.button1.UseVisualStyleBackColor = true;
@@ -69,21 +71,23 @@ namespace CamReceiver
             // 
             // MainImage
             // 
-            this.MainImage.Location = new System.Drawing.Point(252, 135);
+            this.MainImage.Location = new System.Drawing.Point(168, 88);
+            this.MainImage.Margin = new System.Windows.Forms.Padding(2);
             this.MainImage.Name = "MainImage";
-            this.MainImage.Size = new System.Drawing.Size(960, 738);
+            this.MainImage.Size = new System.Drawing.Size(640, 480);
             this.MainImage.TabIndex = 2;
             this.MainImage.TabStop = false;
             this.MainImage.Click += new System.EventHandler(this.MainImage_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1406, 882);
+            this.ClientSize = new System.Drawing.Size(937, 573);
             this.Controls.Add(this.MainImage);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.CamData);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);

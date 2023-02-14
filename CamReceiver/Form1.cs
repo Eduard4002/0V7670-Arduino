@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Threading;
+using System.IO.Ports;
+
 namespace CamReceiver
 {
     public partial class Form1 : Form
@@ -19,8 +21,10 @@ namespace CamReceiver
         BitmapData bmpData;
         object syncRoot = new object();
         byte[] buffer = new byte[1];
-
-        
+        private byte[] imageData;
+        private int imageIndex = 0;
+        bool imageFinished = false;
+        bool buttonClicked;
 
         public Form1()
         {
@@ -29,11 +33,13 @@ namespace CamReceiver
             //bmp = new Bitmap(640, 480);
             //bmpData = bmp.LockBits(new Rectangle(0, 0, 640, 480), System.Drawing.Imaging.ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
 
-            buffer[0] = 0;
+            buffer[0] = 1;
 
-
+            imageData = new byte[640 * 480];
             CamPort.Open();
             CamTimer.Enabled = true;
+            CamPort.DataReceived += SerialPort_DataReceived;
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -45,6 +51,58 @@ namespace CamReceiver
         unsafe private void CamTimer_Tick(object sender, EventArgs e)
         {                     
     
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            imageIndex = 0;
+            //CamPort.Write(buffer, 0, buffer.Length);
+            imageFinished = false;
+            buttonClicked = true;
+        }
+
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            if (!buttonClicked)
+            {
+                return;
+            }
+            Console.WriteLine("Bytes received: " + CamPort.BytesToRead);
+            int bytesToRead = CamPort.BytesToRead;
+            byte[] buffer = new byte[bytesToRead];
+            CamPort.Read(buffer, 0, bytesToRead);
+
+            for (int i = 0; i < bytesToRead; i++)
+            {
+            
+                imageData[imageIndex] = buffer[i];
+                imageIndex++;
+
+
+                if (imageIndex == imageData.Length)
+                {
+                    // We have received a complete image
+                    Bitmap bitmap = new Bitmap(640, 480, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                    System.Drawing.Imaging.ColorPalette palette = bitmap.Palette;
+                    for (int j = 0; j < 256; j++)
+                    {
+                        palette.Entries[j] = Color.FromArgb(j, j, j);
+                    }
+                    bitmap.Palette = palette;
+
+                    BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, 640, 480), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+                    System.Runtime.InteropServices.Marshal.Copy(imageData, 0, bitmapData.Scan0, imageData.Length);
+                    bitmap.UnlockBits(bitmapData);
+                    imageFinished = true;
+                    buttonClicked = false;
+                    imageIndex = 0;
+                    CamPort.DiscardInBuffer();
+                    MainImage.Invoke(new Action(() =>
+                    {
+                        MainImage.Image = bitmap;
+                        MainImage.Refresh();
+                    }));
+                }
+            }
         }
         void requestImage(int width, int height)
         {
@@ -91,11 +149,7 @@ namespace CamReceiver
             sw.Flush();
         }
        
-        private void button1_Click(object sender, EventArgs e)
-        {
-            requestImage(640, 480);
 
-        }
 
         private void MainImage_Click(object sender, EventArgs e)
         {
