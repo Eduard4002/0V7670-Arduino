@@ -18,13 +18,10 @@ namespace CamReceiver
     {
         StreamWriter sw;
         Bitmap bmp;
-        BitmapData bmpData;
-        object syncRoot = new object();
-        byte[] buffer = new byte[1];
+        byte[] startBuffer = new byte[1];
+        byte[] endBuffer = new byte[1];
         private byte[] imageData;
         private int imageIndex = 0;
-        bool imageFinished = false;
-        bool buttonClicked;
 
         public Form1()
         {
@@ -33,7 +30,8 @@ namespace CamReceiver
             //bmp = new Bitmap(640, 480);
             //bmpData = bmp.LockBits(new Rectangle(0, 0, 640, 480), System.Drawing.Imaging.ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
 
-            buffer[0] = 1;
+            startBuffer[0] = 1;
+            endBuffer[0] = 0;
 
             imageData = new byte[640 * 480];
             CamPort.Open();
@@ -46,7 +44,6 @@ namespace CamReceiver
         {
             
         }
-        int bytesRead = 0;
 
         unsafe private void CamTimer_Tick(object sender, EventArgs e)
         {                     
@@ -54,19 +51,12 @@ namespace CamReceiver
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            imageIndex = 0;
-            //CamPort.Write(buffer, 0, buffer.Length);
-            imageFinished = false;
-            buttonClicked = true;
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (!buttonClicked)
-            {
-                return;
-            }
-            Console.WriteLine("Bytes received: " + CamPort.BytesToRead);
+        
+            Console.WriteLine(CamPort.BytesToRead);
             int bytesToRead = CamPort.BytesToRead;
             byte[] buffer = new byte[bytesToRead];
             CamPort.Read(buffer, 0, bytesToRead);
@@ -80,6 +70,8 @@ namespace CamReceiver
 
                 if (imageIndex == imageData.Length)
                 {
+                    CamPort.Write(endBuffer, 0, endBuffer.Length);
+
                     // We have received a complete image
                     Bitmap bitmap = new Bitmap(640, 480, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
                     System.Drawing.Imaging.ColorPalette palette = bitmap.Palette;
@@ -92,10 +84,8 @@ namespace CamReceiver
                     BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, 640, 480), ImageLockMode.WriteOnly, bitmap.PixelFormat);
                     System.Runtime.InteropServices.Marshal.Copy(imageData, 0, bitmapData.Scan0, imageData.Length);
                     bitmap.UnlockBits(bitmapData);
-                    imageFinished = true;
-                    buttonClicked = false;
                     imageIndex = 0;
-                    CamPort.DiscardInBuffer();
+                    //CamPort.DiscardInBuffer();
                     MainImage.Invoke(new Action(() =>
                     {
                         MainImage.Image = bitmap;
@@ -109,7 +99,7 @@ namespace CamReceiver
             //Send "0" to camera
             bmp = new Bitmap(width, height);
 
-            CamPort.Write(buffer, 0, buffer.Length);
+            //CamPort.Write(buffer, 0, buffer.Length);
 
             int data;
 

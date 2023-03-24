@@ -133,6 +133,7 @@ void setup(){
   UCSR0C=6;//async 1 stop bit 8bit char no parity bits
   pinMode(8,INPUT);
   camInit();
+  bool clicked = false;
 #ifdef useVga
   setRes(VGA);
   setColorSpace(BAYER_RGB);
@@ -159,9 +160,10 @@ void setup(){
       wrReg(0x11,x);
       _delay_ms(1000);*/
 
-      if(UDR0 == 0){
+      if(UDR0 == 1 && !clicked){
          #ifdef useVga
             captureImg(640,480);
+            clicked = true;
 
       #elif defined(useQvga)
           captureImg(320*2,240);
@@ -169,7 +171,10 @@ void setup(){
           captureImg(160*2,120);
       #endif
       }
-      
+      if(UDR0 == 0){
+        clicked = false;
+      }
+       
       
   
     //}while(--x);//Uncomment this line to test divider settings
